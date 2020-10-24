@@ -14,7 +14,7 @@ namespace Data.Base
 		}
 
 		// **********
-		public Tools.Options Options { get; set; }
+		protected Tools.Options Options { get; set; }
 		// **********
 
 		// **********
@@ -36,7 +36,52 @@ namespace Data.Base
 					var optionsBuilder =
 						new DbContextOptionsBuilder<DatabaseContext>();
 
-					optionsBuilder.UseSqlServer(connectionString: Options.ConnectionString);
+					switch (Options.Provider)
+					{
+						case Tools.Enums.Provider.SqlServer:
+						{
+							optionsBuilder.UseSqlServer
+								(connectionString: Options.ConnectionString);
+
+							break;
+						}
+
+						case Tools.Enums.Provider.MySql:
+						{
+							//optionsBuilder.UseMySql
+							//	(connectionString: Options.ConnectionString);
+
+							break;
+						}
+
+						case Tools.Enums.Provider.Oracle:
+						{
+							//optionsBuilder.UseOracle
+							//	(connectionString: Options.ConnectionString);
+
+							break;
+						}
+
+						case Tools.Enums.Provider.PostgreSQL:
+						{
+							//optionsBuilder.UsePostgreSQL
+							//	(connectionString: Options.ConnectionString);
+
+							break;
+						}
+
+						case Tools.Enums.Provider.InMemory:
+						{
+							optionsBuilder.UseInMemoryDatabase(databaseName: "Temp");
+
+							break;
+						}
+
+						default:
+						{
+							break;
+						}
+					}
 
 					_databaseContext =
 						new DatabaseContext(options: optionsBuilder.Options);
@@ -68,7 +113,7 @@ namespace Data.Base
 		/// <summary>
 		/// To detect redundant calls
 		/// </summary>
-		public bool IsDisposed { get; private set; }
+		public bool IsDisposed { get; protected set; }
 		// **********
 
 		/// <summary>

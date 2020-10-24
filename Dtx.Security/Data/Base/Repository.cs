@@ -11,6 +11,16 @@ namespace Data.Base
 			// **************************************************
 			//if (databaseContext == null)
 			//{
+			//	throw new System.ArgumentNullException(paramName: "databaseContext");
+			//	throw new System.ArgumentNullException(paramName: "databaseContextSouti");
+			//}
+
+			//DatabaseContext = databaseContext;
+			// **************************************************
+
+			// **************************************************
+			//if (databaseContext == null)
+			//{
 			//	throw new System.ArgumentNullException(paramName: nameof(databaseContext));
 			//}
 
@@ -26,11 +36,13 @@ namespace Data.Base
 		}
 
 		// **********
-		internal DatabaseContext DatabaseContext { get; set; }
+		internal DatabaseContext DatabaseContext { get; }
+		//internal DatabaseContext DatabaseContext { get; set; }
 		// **********
 
 		// **********
-		protected Microsoft.EntityFrameworkCore.DbSet<T> DbSet { get; set; }
+		internal Microsoft.EntityFrameworkCore.DbSet<T> DbSet { get; }
+		//internal Microsoft.EntityFrameworkCore.DbSet<T> DbSet { get; set; }
 		// **********
 
 		public virtual void Insert(T entity)
@@ -95,6 +107,8 @@ namespace Data.Base
 			{
 				throw new System.ArgumentNullException(paramName: nameof(entity));
 			}
+
+			//DbSet.Update(entity);
 
 			await System.Threading.Tasks.Task.Run(() =>
 			{
@@ -182,12 +196,26 @@ namespace Data.Base
 
 		public virtual System.Collections.Generic.IList<T> GetAll()
 		{
-			return DbSet.ToList();
+			//return DbSet.ToList();
+
+			var result =
+				DbSet.ToList()
+				;
+
+			return result;
 		}
 
 		public virtual async System.Threading.Tasks.Task<System.Collections.Generic.IList<T>> GetAllAsync()
 		{
-			return await DbSet.ToListAsync();
+			//return await DbSet.ToListAsync();
+
+			var result =
+				await
+				DbSet.ToListAsync()
+				;
+
+			return result;
+
 		}
 	}
 }

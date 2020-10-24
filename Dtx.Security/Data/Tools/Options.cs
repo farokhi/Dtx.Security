@@ -7,7 +7,7 @@
 		}
 
 		// **********
-		public bool InMemoryDatabase { get; set; }
+		public Enums.Provider Provider { get; set; }
 		// **********
 
 		// **********

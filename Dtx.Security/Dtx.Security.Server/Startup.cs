@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Dtx.Security.Server
@@ -19,13 +18,14 @@ namespace Dtx.Security.Server
 		public void ConfigureServices
 			(Microsoft.Extensions.DependencyInjection.IServiceCollection services)
 		{
+			// Cross-Origin Resource Sharing (CORS)
 			services.AddCors(options =>
 			{
 				options.AddPolicy(AdminCorsPolicy,
 					builder =>
 					{
 						builder
-							.WithOrigins("http://localhost:1202")
+							.WithOrigins("http://localhost:5001")
 							.AllowAnyHeader()
 							.AllowAnyMethod()
 							//.AllowCredentials()
@@ -55,13 +55,13 @@ namespace Dtx.Security.Server
 			//services.AddDbContext<Data.DatabaseContext>(options =>
 			//{
 			//	options.UseSqlServer
-			//	(connectionString: "Password=1234512345;Persist Security Info=True;User ID=SA;Initial Catalog=DtxSecurity;Data Source=.");
+			//		(connectionString: "Password=1234512345;Persist Security Info=True;User ID=SA;Initial Catalog=DtxSecurity;Data Source=.");
 			//});
 
 			//services.AddDbContext<Data.DatabaseContext>(options =>
 			//{
 			//	options.UseSqlServer
-			//	(connectionString: Configuration.GetSection(key: "ConnectionStrings").GetSection(key: "MyConnectionStringName");
+			//		(connectionString: Configuration.GetSection(key: "ConnectionStrings").GetSection(key: "MyConnectionString");
 			//});
 
 			//services.AddTransient<Data.IUnitOfWork, Data.UnitOfWork>();
@@ -71,12 +71,22 @@ namespace Dtx.Security.Server
 				Data.Tools.Options options =
 					new Data.Tools.Options
 					{
-						InMemoryDatabase = false,
-						ConnectionString = "Password=1234512345;Persist Security Info=True;User ID=SA;Initial Catalog=DtxSecurity;Data Source=.",
+						Provider =
+							(Data.Tools.Enums.Provider)
+							System.Convert.ToInt32(Configuration.GetSection(key: "databaseProvider").Value),
+
+						//using Microsoft.EntityFrameworkCore;
+						//ConnectionString =
+						//	Configuration.GetConnectionString().GetSection(key: "MyConnectionString").Value,
+
+						ConnectionString =
+							Configuration.GetSection(key: "ConnectionStrings").GetSection(key: "MyConnectionString").Value,
 					};
 
 				return new Data.UnitOfWork(options: options);
 			});
+
+			//services.AddTransient<Dtx.ILogger, Dtx.Logger>();
 		}
 
 		public void Configure
